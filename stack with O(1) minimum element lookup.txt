@@ -1,0 +1,89 @@
+/* This structure will have complexities as follows...
+-> O(1) time complexity for push()...
+-> O(1) time complexity for pop()...
+-> O(1) time complexity for peek()...
+-> O(1) time complexity for get_min()...
+-> O(n) space complexity for the additional stack structure... (n being number of elements on the stack)
+*/
+
+class my_stack
+{
+	// Declarations...
+
+	int *arr;
+	int s;
+	int top;
+	int min;
+	stack<int> minimums;
+
+	// Constructor...
+	stack(int size)
+	{
+		arr=(int *)malloc(size*sizeof(int));
+		s=size;
+		top=-1;
+	}
+
+	// Running time of the push method is O(1) since we would just need to make one comparision to update the min element...
+	void push(int x)
+	{
+		// Check for overflow...
+		if(top==s)
+		{
+			printf("\nStack overflow...");
+			return;
+		}
+		else
+			arr[++top]=x; // Push it on the stack...
+
+		if(top==0)
+		{
+			/* Means that if it is the first element that is being pushed on the stack, assume it to be the minimum
+				(top=0 means stack has 1 element as top was initialized to -1)*/
+
+			min = x;
+			return;
+		}
+		else
+		{
+			if(x<min)
+				min=x;
+
+			// Next, add it to the minimums stack...
+			minimums.push(x<min?x:min); // This will keep track of the minimum values...
+		}
+
+		// Hence, the running time will be just O(1)
+		// This includes the running time for push which is O(1) and running time for updating min which again is O(1)
+	}
+
+	int pop()
+	{
+		int top_element;
+
+		// Check for underflow...
+		if(top==-1)
+		{
+			printf("Stack underflow...");
+			return;
+		}
+		else
+		{
+			top_element = arr[top--];
+			minimums.pop(); // Pop out the top most minimum element...
+
+			// Next, we just need to get the top most element of the minimums stack and we'll have the new minimum element...
+			min = minimums.peek();
+		}		
+	}
+
+	int peek()
+	{
+		return arr[top];
+	}
+
+	int get_min()
+	{
+		return min;
+	}
+}
